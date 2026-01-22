@@ -13,7 +13,7 @@ from modelscope.hub.snapshot_download import snapshot_download
 # ========== 模型配置 ==========
 MS_MODEL_ID = "qwen/Qwen2.5-1.5B-Instruct"
 LOCAL_MODEL_DIR = "./models/Qwen2.5-1.5B-Instruct"
-OUTPUT_DIR = "./output/luoguqwen-lora"
+OUTPUT_DIR = "./output/luoguqwencoder-lora"
 
 # ========== 下载模型 ==========
 if not os.path.exists(LOCAL_MODEL_DIR):
@@ -56,7 +56,7 @@ model.config.use_cache = False
 lora_config = LoraConfig(
     r=16,
     lora_alpha=32,
-    lora_dropout=0.05,
+    lora_dropout=0.1,
     bias="none",
     task_type="CAUSAL_LM",
     target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
@@ -137,7 +137,10 @@ sft_config = SFTConfig(
     per_device_train_batch_size=1,
     gradient_accumulation_steps=16,
     num_train_epochs=2,
-    learning_rate=2e-4,
+    learning_rate=1e-5,
+    weight_decay=0.01,
+    lr_scheduler_type="cosine",
+    warmup_steps=100,
     fp16=False,
     bf16=True,
     logging_steps=50,
