@@ -74,15 +74,15 @@ python evaluate_model.py
 
 ```python
 from modelscope.hub.snapshot_download import snapshot_download
-snapshot_download(repo_id="qwen/Qwen2.5-1.5B-Instruct", local_dir="./models/Qwen2.5-1.5B-Instruct")
+snapshot_download(repo_id="qwen/Qwen2.5-Coder-1.5B-Instruct", local_dir="./models/Qwen2.5-Coder-1.5B-Instruct")
 ```
 
 - 或通过 Hugging Face（如可用且许可允许）：
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer
-tokenizer = AutoTokenizer.from_pretrained("qwen/Qwen2.5-1.5B-Instruct")
-model = AutoModelForCausalLM.from_pretrained("qwen/Qwen2.5-1.5B-Instruct")
+tokenizer = AutoTokenizer.from_pretrained("qwen/Qwen2.5-Coder-1.5B-Instruct")
+model = AutoModelForCausalLM.from_pretrained("qwen/Qwen2.5-Coder-1.5B-Instruct")
 ```
 
 注意：基模型体积较大并含有独立许可条款，请遵守相应使用条款。本仓库不包含完整基模型文件。
@@ -101,9 +101,9 @@ model = AutoModelForCausalLM.from_pretrained("qwen/Qwen2.5-1.5B-Instruct")
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
-base = AutoModelForCausalLM.from_pretrained("./models/Qwen2.5-1.5B-Instruct", device_map="auto", torch_dtype="auto", trust_remote_code=True)
-tokenizer = AutoTokenizer.from_pretrained("./models/Qwen2.5-1.5B-Instruct", trust_remote_code=True)
-model = PeftModel.from_pretrained(base, "./output/luoguqwen-lora")
+base = AutoModelForCausalLM.from_pretrained("./models/Qwen2.5-Coder-1.5B-Instruct", device_map="auto", torch_dtype="auto", trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("./models/Qwen2.5-Coder-1.5B-Instruct", trust_remote_code=True)
+model = PeftModel.from_pretrained(base, "./output/luoguqwencoder-lora")
 model = model.merge_and_unload()
 
 # 使用 model.generate 进行推理

@@ -11,8 +11,8 @@ from trl import SFTTrainer, SFTConfig
 from modelscope.hub.snapshot_download import snapshot_download
 
 # ========== 模型配置 ==========
-MS_MODEL_ID = "qwen/Qwen2.5-1.5B-Instruct"
-LOCAL_MODEL_DIR = "./models/Qwen2.5-1.5B-Instruct"
+MS_MODEL_ID = "qwen/Qwen2.5-Coder-1.5B-Instruct"
+LOCAL_MODEL_DIR = "./models/Qwen2.5-Coder-1.5B-Instruct"
 OUTPUT_DIR = "./output/luoguqwencoder-lora"
 
 # ========== 下载模型 ==========
@@ -109,11 +109,12 @@ def process_dataset_to_chatml(example):
 {prompt}
 
 【要求】
-- 给出清晰的算法思路
-- 分析时间复杂度
-- 给出可通过的C++代码
+- 将问题抽象成数学表述【较重要，但只需略微输出】
+- 逐步分析合适算法与数据结构【重要，但只需略微输出】
+- 给出完整的且易读性高的优质的C++代码【最重要，要完整输出】
+- 将最终解决方案放在单个代码块中【重要】
 - 请勿包含任何调试信息或额外输出
-- 将最终解决方案放在单个代码块中"""
+"""
 
         # 6. 转换为 ChatML 格式（TRL 0.27+ 标准）
         return {

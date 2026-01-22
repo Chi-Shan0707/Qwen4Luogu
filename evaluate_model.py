@@ -5,8 +5,8 @@ import json
 import os
 
 # 模型路径
-BASE_MODEL_DIR = "./models/Qwen2.5-1.5B-Instruct"
-LORA_DIR = "./output/luoguqwen-lora"
+BASE_MODEL_DIR = "./models/Qwen2.5-Coder-1.5B-Instruct"
+LORA_DIR = "./output/luoguqwencoder-lora"
 OUTPUT_DIR = "./evaluation_results"
 
 # 加载tokenizer
@@ -17,7 +17,7 @@ tokenizer.padding_side = "right"
 # 加载基模型
 base_model = AutoModelForCausalLM.from_pretrained(
     BASE_MODEL_DIR,
-    torch_dtype=torch.float16,
+    dtype=torch.bfloat16,
     device_map="auto",
     trust_remote_code=True,
 )
@@ -25,6 +25,10 @@ base_model = AutoModelForCausalLM.from_pretrained(
 # 加载LoRA权重
 model = PeftModel.from_pretrained(base_model, LORA_DIR)
 model = model.merge_and_unload()  # 合并权重以提高推理速度
+
+
+print("model max pos:", model.config.max_position_embeddings)
+print("tokenizer max len:", tokenizer.model_max_length)
 
 # 测试题目（可以从dataset_example中取几个）
 test_problems = [
@@ -87,11 +91,13 @@ def generate_response(problem):
 {problem['description']}
 
 【要求】
-- 给出清晰的算法思路
-- 分析时间复杂度
-- 给出可通过的C++代码
-- 请勿包含任何调试信息或额外输出
-- 将最终解决方案放在单个代码块中"""
+- 将问题抽象成数学表述【较重要，略微输出】
+- 逐步思考合适算法【略微输出】
+- 给出完整的且易读性高的优质的C++代码【最重要，要完整输出】
+- 将最终解决方案放在单个代码块中【重要】
+- 请勿包含任何调试信息或额外输出【你不能输出】
+
+"""
 
     messages = [{"role": "user", "content": user_message}]
 
@@ -105,7 +111,7 @@ def generate_response(problem):
         outputs = model.generate(
             input_ids,
             attention_mask=attention_mask,
-            max_new_tokens=2048,
+            max_new_tokens=3072,
             temperature=0.7,
             top_p=0.9,
             do_sample=True,
