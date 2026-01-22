@@ -35,6 +35,8 @@
 
 ## 快速开始
 
+**注意：本项目代码基于最新版本的库编写，请确保安装最新版本的依赖包以避免兼容性问题。**
+
 1. 创建虚拟环境并安装依赖：
 
 ```bash
@@ -114,6 +116,8 @@ model = model.merge_and_unload()
 
 ## 训练（SFT）关键参数
 
+**注意：本项目使用 TRL 0.27+ 的新特性（如 SFTConfig 和 ChatML 格式），请确保 TRL 版本 >= 0.27.0。**
+
 `train_sft.py` 中使用的示例超参数：
 
 - LoRA：`r=16`，`lora_alpha=32`，`lora_dropout=0.05`，目标模块：`q_proj, k_proj, v_proj, o_proj`。
@@ -166,15 +170,22 @@ dataset = load_dataset("Misaka114514/luogu_dpo")
 
 ## 依赖安装
 
+**重要：本项目代码基于最新版本的库编写，请务必使用最新版本以确保兼容性。**
+
 ```bash
+# 推荐使用最新版本（必须 >= 指定的最低版本）
 pip install -U \
-  torch \
-  transformers \
-  datasets \
-  accelerate \
-  peft \
-  trl \
-  bitsandbytes
+  torch>=2.10.0 \
+  transformers>=4.57.0 \
+  datasets>=4.5.0 \
+  accelerate>=1.12.0 \
+  peft>=0.18.0 \
+  trl>=0.27.0 \
+  bitsandbytes>=0.49.0 \
+  modelscope>=1.34.0
+
+# 或使用 requirements.txt（推荐）
+pip install -r requirements.txt
 ```
 
 ---
@@ -208,6 +219,8 @@ The repository contains examples for LoRA fine-tuning of the Qwen instruction mo
 ---
 
 ## Quick start
+
+**Note: This project code is written for the latest library versions. Please ensure you install the latest versions of dependencies to avoid compatibility issues.**
 
 1. Create a virtual environment and install dependencies:
 
@@ -288,6 +301,8 @@ If only publishing LoRA weights, please explain in the README that users need to
 
 ## Training (SFT) key parameters
 
+**Note: This project uses TRL 0.27+ new features (such as SFTConfig and ChatML format), please ensure TRL version >= 0.27.0.**
+
 Example hyperparameters used in `train_sft.py`:
 
 - LoRA: `r=16`, `lora_alpha=32`, `lora_dropout=0.05`, target modules: `q_proj, k_proj, v_proj, o_proj`.
@@ -339,13 +354,20 @@ If using this project as a baseline or citing it in papers, please retain author
 
 ## Dependencies
 
+**Important: This project code is written for the latest library versions. Please use the latest versions to ensure compatibility.**
+
 ```bash
+# Recommended to use latest versions (must be >= specified minimum versions)
 pip install -U \
-  torch \
-  transformers \
-  datasets \
-  accelerate \
-  peft \
-  trl \
-  bitsandbytes
+  torch>=2.10.0 \
+  transformers>=4.57.0 \
+  datasets>=4.5.0 \
+  accelerate>=1.12.0 \
+  peft>=0.18.0 \
+  trl>=0.27.0 \
+  bitsandbytes>=0.49.0 \
+  modelscope>=1.34.0
+
+# Or use requirements.txt (recommended)
+pip install -r requirements.txt
 ```
