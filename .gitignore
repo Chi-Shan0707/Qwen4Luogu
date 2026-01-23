@@ -141,3 +141,7 @@ logs/
 # Temporary files
 *.tmp
 *.temp
+
+# Local datasets (can be regenerated with download scripts)
+local_luogu_dpo/
+dataset_example/  # 如果不想上传示例数据
