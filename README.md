@@ -30,7 +30,9 @@
 
 - `train_sft.py`：基于 TRL 的 `SFTTrainer` 进行 LoRA 微调。
 - `evaluate_model.py`：使用合并后的 LoRA 权重进行离线推理的示例。
-- `dataset_example/`：小规模示例数据，用于演示数据格式。
+- `download_dataset.py`：下载dataset
+- `convert_dataset.py`：将原本的数据集格式转化为`SFTTrainer`可接受的`prompt`+`completion`格式
+- `check_format.py`：检查转化后的格式
 
 ---
 
@@ -214,8 +216,10 @@ Contents
 The repository contains examples for LoRA fine-tuning of the Qwen instruction model on Chinese contest problem data:
 
 - `train_sft.py`: LoRA fine-tuning using TRL's `SFTTrainer`.
-- `evaluate_model.py`: example for offline inference using merged LoRA weights.
-- `dataset_example/`: a small example dataset to demonstrate data format.
+- `evaluate_model.py`: Example for offline inference using merged LoRA weights.
+- `download_dataset.py`: Download dataset.
+- `convert_dataset.py`: Convert the original dataset format to the `prompt`+`completion` format acceptable by `SFTTrainer`.
+- `check_format.py`: Check the converted format.
 
 ---
 

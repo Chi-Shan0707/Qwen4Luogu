@@ -1,6 +1,6 @@
 import torch
 import os
-from datasets import load_dataset
+from datasets import load_dataset, load_from_disk
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
@@ -65,93 +65,34 @@ model = get_peft_model(model, lora_config)
 model.print_trainable_parameters()
 
 # ========== 加载数据集 ==========
-dataset = load_dataset("Misaka114514/luogu_dpo")
+# dataset = load_dataset("Misaka114514/luogu_dpo")
+dataset = load_from_disk("./local_luogu_dataset")
 
-# ========== 数据预处理：转换为 ChatML 格式（TRL 0.27+ 标准）==========
-def process_dataset_to_chatml(example):
-    """
-    将原始数据转换为 ChatML 格式
-    - 所有格式化逻辑在此完成
-    - trainer 只接收最终的 messages 字段
-    - 符合 TRL 0.27+ 设计规范
-    """
-    try:
-        # 1. 提取题目描述：从 "## 题目描述" 到 "【题目来源】"
-        prompt = ""
-        for conv in example["conversations"]:
-            if conv["from"] == "human":
-                conv_text = conv["value"].strip()
-                start_marker = "## 题目描述"
-                end_marker = "【题目来源】"
-                start_idx = conv_text.find(start_marker)
-                end_idx = conv_text.find(end_marker)
-                if start_idx == -1:
-                    start_idx = 0
-                if end_idx == -1:
-                    end_idx = len(conv_text)
-                prompt = conv_text[start_idx:end_idx].strip()
-                break
-
-        # 2. 提取解答内容
-        completion = example["chosen"]["value"].strip()
-
-        # 3. 过滤无效样本
-        if not prompt or not completion:
-            return {"messages": [], "valid": False}
-
-        # 4. 清洗题目文本
-        prompt = prompt.replace("\n\n\n", "\n").strip()
-
-        # 5. 构造用户指令（包含题目和要求）
-        user_message = f"""你是一名信息学竞赛选手，请解决下面的问题。
-
-【题目】
-{prompt}
-
-【要求】
-- 将问题抽象成数学表述【较重要，但只需略微输出】
-- 逐步分析合适算法与数据结构【重要，但只需略微输出】
-- 给出完整的且易读性高的优质的C++代码【最重要，要完整输出】
-- 将最终解决方案放在单个代码块中【重要】
-- 请勿包含任何调试信息或额外输出
-"""
-
-        # 6. 转换为 ChatML 格式（TRL 0.27+ 标准）
-        return {
-            "messages": [
-                {"role": "user", "content": user_message},
-                {"role": "assistant", "content": completion}
-            ],
-            "valid": True
-        }
-    except (KeyError, Exception):
-        return {"messages": [], "valid": False}
-
-# 应用 ChatML 转换并过滤无效样本
-dataset = dataset.map(process_dataset_to_chatml, remove_columns=dataset["train"].column_names)
-dataset = dataset.filter(lambda x: x["valid"] is True)
-print(f"过滤后有效样本数：训练集 {len(dataset['train'])} 条")
+def format_piece(sample):
+    return sample["prompt"] + sample["completion"]
 
 # ========== SFTConfig：仅包含训练参数（TRL 0.27+ 规范）==========
 sft_config = SFTConfig(
     output_dir=OUTPUT_DIR,
-    per_device_train_batch_size=1,
-    gradient_accumulation_steps=16,
-    num_train_epochs=2,
-    learning_rate=1e-5,
+    per_device_train_batch_size=1, #一个gpu上同时处理1批数据
+    gradient_accumulation_steps=16,# 每16步才更新一次参数
+    # batch， 一次处理的样本
+    # batchsize 16*1=16个
+    num_train_epochs=2, # 完整遍历数据集2次
+    learning_rate=1e-5, # 学习率，即参数更新的步长
     weight_decay=0.01,
     lr_scheduler_type="cosine",
     warmup_steps=100,
     fp16=False,
     bf16=True,
-    logging_steps=50,
-    save_steps=500,
-    save_total_limit=2,
+    logging_steps=50,# 每50步记录一次日志
+    save_steps=50, # 每500步保存一次模型检查点
+    save_total_limit=10, #保存的检查点总数限制。设置为 2，只保留最新的 2 个检查点，防止磁盘空间占用过多。
     report_to="none",
-    gradient_checkpointing=True,
+    gradient_checkpointing=True, # 是否启用梯度检查点。设置为 True，通过重计算中间激活节省显存（以时间换空间），适合大模型训练。
     remove_unused_columns=False,
     dataloader_pin_memory=False,
-    neftune_noise_alpha=5.0,
+    neftune_noise_alpha=5.0,# NEFTune 噪声参数。设置为 5.0，用于在训练中添加噪声以改善生成质量（减少生成重复）。值通常在 0-10 之间，0 表示禁用。
 )
 
 # ========== SFTTrainer：只负责训练，不做格式化（TRL 0.27+ 规范）==========
@@ -160,6 +101,7 @@ trainer = SFTTrainer(
     args=sft_config,
     train_dataset=dataset["train"],
     processing_class=tokenizer,
+    # formatting_func=format_piece,
 )
 
 # ========== 训练 ==========

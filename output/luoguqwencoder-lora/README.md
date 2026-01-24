@@ -8,8 +8,8 @@ tags:
 - transformers
 - trl
 licence: license
-base_model: ./models/Qwen2.5-Coder-1.5B-Instruct
 pipeline_tag: text-generation
+base_model: ./models/Qwen2.5-Coder-1.5B-Instruct
 ---
 
 # Model Card for luoguqwencoder-lora
