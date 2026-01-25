@@ -131,8 +131,31 @@ models/
 *.tar.gz
 *.zip
 
-# Training outputs (optional: comment out if you want to upload checkpoints)
-# output/
+# Training outputs (we ignore by default; whitelist selected output files below)
+output/
+# Keep model metadata and final adapter (adapter binary will be tracked via Git LFS)
+!output/luoguqwencoder-lora/
+!output/luoguqwencoder-lora/README.md
+!output/luoguqwencoder-lora/adapter_config.json
+!output/luoguqwencoder-lora/adapter_model.safetensors
+!output/luoguqwencoder-lora/merges.txt
+!output/luoguqwencoder-lora/tokenizer.json
+!output/luoguqwencoder-lora/tokenizer_config.json
+!output/luoguqwencoder-lora/vocab.json
+!output/luoguqwencoder-lora/added_tokens.json
+!output/luoguqwencoder-lora/special_tokens_map.json
+!output/luoguqwencoder-lora/chat_template.jinja
+# Explicitly ignore checkpoints and optimizer files in outputs
+output/luoguqwencoder-lora/checkpoint-*/
+
+# Allow adding adapter-only safetensors for selected checkpoints (saved via Git LFS)
+# Also unignore the checkpoint directories themselves so files inside can be re-included
+!output/luoguqwencoder-lora/checkpoint-350/
+!output/luoguqwencoder-lora/checkpoint-450/
+!output/luoguqwencoder-lora/checkpoint-550/
+!output/luoguqwencoder-lora/checkpoint-350/adapter_model.safetensors
+!output/luoguqwencoder-lora/checkpoint-450/adapter_model.safetensors
+!output/luoguqwencoder-lora/checkpoint-550/adapter_model.safetensors
 
 # Logs
 logs/
@@ -145,3 +168,6 @@ logs/
 # Local datasets (can be regenerated with download scripts)
 local_luogu_dpo/
 dataset_example/  # 如果不想上传示例数据
+local_luogu_dataset/output/luoguqwencoder-lora/*.safetensors
+output/luoguqwencoder-lora/checkpoint-*/adapter_model.safetensors
+output/luoguqwencoder-lora/*.safetensors

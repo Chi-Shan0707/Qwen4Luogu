@@ -9,10 +9,10 @@ from transformers import (
 from peft import LoraConfig, get_peft_model
 from trl import SFTTrainer, SFTConfig
 from modelscope.hub.snapshot_download import snapshot_download
-
+import optimum
 # ========== 模型配置 ==========
-MS_MODEL_ID = "qwen/Qwen2.5-Coder-3B-Instruct-GPTQ-Int8"
-LOCAL_MODEL_DIR = "./models/Qwen2.5-Coder-3B-Instruct-GPTQ-Int8"
+MS_MODEL_ID = "qwen/Qwen2.5-Coder-3B-Instruct"
+LOCAL_MODEL_DIR = "./models/Qwen2.5-Coder-3B-Instruct"
 OUTPUT_DIR = "./output/luoguqwencoder-lora"
 
 #  Qwen2.5-Coder-7B-Instruct

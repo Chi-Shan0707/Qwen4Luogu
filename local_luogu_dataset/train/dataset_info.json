@@ -1,0 +1,38 @@
+{
+  "builder_name": "json",
+  "citation": "",
+  "config_name": "default",
+  "dataset_name": "luogu_dpo",
+  "dataset_size": 51009953,
+  "description": "",
+  "download_checksums": {
+    "hf://datasets/Misaka114514/luogu_dpo@ec5269e9b8dbcf915317dc7bfeb67ed774fa5935/luogu_dpo.json": {
+      "num_bytes": 53742913,
+      "checksum": null
+    }
+  },
+  "download_size": 53742913,
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    }
+  },
+  "homepage": "",
+  "license": "",
+  "size_in_bytes": 104752866,
+  "splits": {
+    "train": {
+      "name": "train",
+      "num_bytes": 51009953,
+      "num_examples": 5742,
+      "dataset_name": "luogu_dpo"
+    }
+  },
+  "version": {
+    "version_str": "0.0.0",
+    "major": 0,
+    "minor": 0,
+    "patch": 0
+  }
+}

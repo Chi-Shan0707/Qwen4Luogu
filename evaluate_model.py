@@ -5,8 +5,8 @@ import json
 import os
 
 # 模型路径
-BASE_MODEL_DIR = "./models/Qwen2.5-Coder-1.5B-Instruct"
-LORA_DIR = "./output/luoguqwencoder-lora/checkpoint-662"
+BASE_MODEL_DIR = "./models/Qwen2.5-Coder-3B-Instruct"
+LORA_DIR = "./output/luoguqwencoder-lora/checkpoint-450"
 OUTPUT_DIR = "./evaluation_results"
 
 # 加载tokenizer

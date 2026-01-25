@@ -14,9 +14,10 @@
  *不对，为什么疯狂报mismatch啊啊？从1.5B->7B我啥都没改啊？<br>
  *疯狂debug,疯狂研究格式*<br>
  算了，格式弄成所谓的标准型吧<br>
- 7B根本跑不动啊，只能3B
+ 7B根本跑不动啊，只能3B<br>
+ ~~啊训练完了，参数根本上传不动啊？啊，huggingface也上传不动啊PwP~~
 
-> 友情提示
+> 友情提示<br>
 > UserWarning: Model has `tie_word_embeddings=True` and a tied layer is part of the adapter, but `ensure_weight_tying` is not set to True. This can lead to complications, for example when merging the adapter or converting your model to formats other than safetensors. Check the discussion here: https://github.com/huggingface/peft/issues/2777<br>
 > *适配器和权重绑定的冲突，本质是PEFT 的 “独立层默认认知”与模型的 “权重绑定实际情况”的偏差，仅在合并适配器权重时暴露，ensure_weight_tying=True就是用来修正这个偏差的开关。而你现在看到的警告，就是 PEFT 在提醒你：“我现在按默认认知处理适配器，合并时可能会出偏差，记得打开纠偏开关～”。*
 
@@ -104,6 +105,10 @@ model = AutoModelForCausalLM.from_pretrained("qwen/Qwen2.5-Coder-1.5B-Instruct")
 ## 使用 LoRA 权重进行推理
 
 训练完成后，`output/luoguqwen-lora/`（或 `train_sft.py` 中的 `OUTPUT_DIR`）将包含 LoRA 权重与 tokenizer 文件。
+
+注意：本项目的 LoRA 权重也已经上传到 ModelScope（模型页路径）：
+https://www.modelscope.cn/models/yuhanChi/Qwen4Luogu/tree/master/output/luoguqwencoder-lora 。
+你可以直接从该页面下载所需文件并放到本地的 `output/luoguqwencoder-lora/` 目录，或在加载时使用该目录路径，之后按下述步骤加载和合并权重。
 
 推荐流程：
 
@@ -291,6 +296,10 @@ Note: base models are large and carry separate license terms. Follow the provide
 ## Inference with LoRA weights
 
 After training, `output/luoguqwen-lora/` (or `OUTPUT_DIR` in `train_sft.py`) will contain LoRA weights and tokenizer files.
+
+Note: The LoRA weights for this project have also been uploaded to ModelScope at:
+https://www.modelscope.cn/models/yuhanChi/Qwen4Luogu/tree/master/output/luoguqwencoder-lora .
+You can download the files from that page and place them under the local `output/luoguqwencoder-lora/` directory, or point your loading code to that directory, then follow the steps below to load and optionally merge the adapter weights.
 
 Recommended process:
 
